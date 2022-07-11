@@ -13,7 +13,7 @@ class UrlTest extends TestCase
         $this->assertEquals('foo%5B0%5D=bar&foo%5B1%5D=baz', Url::buildQuery(['foo' => ['bar', 'baz']]));
         $this->assertEquals(
             'foo=http%3A%2F%2Fwww.vysokeskoly.cz%2F%3Fquery%3Dparam',
-            Url::buildQuery(['foo' => 'http://www.vysokeskoly.cz/?query=param'])
+            Url::buildQuery(['foo' => 'http://www.vysokeskoly.cz/?query=param']),
         );
     }
 

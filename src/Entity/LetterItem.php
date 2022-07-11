@@ -4,19 +4,11 @@ namespace VysokeSkoly\UtilsBundle\Entity;
 
 class LetterItem
 {
-    private string $letter;
-    private array $items;
-
-    public function __construct(string $letter, array $items = [])
+    public function __construct(private string $letter, private array $items = [])
     {
-        $this->letter = $letter;
-        $this->items = $items;
     }
 
-    /**
-     * @param mixed $item
-     */
-    public function addItem($item): void
+    public function addItem(mixed $item): void
     {
         $this->items[] = $item;
     }
