@@ -16,9 +16,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 // intentional use of strpos and strlen because of substr_replace is not multi-byte
                 'src/Service/HtmlHelper.php',
             ],
-        ]
+        ],
     );
 
     $containerConfigurator->import(__DIR__ . '/tools/coding-standards/vendor/lmc/coding-standard/ecs.php');
-    $containerConfigurator->import(__DIR__ . '/tools/coding-standards/vendor/lmc/coding-standard/ecs-7.4.php');
+    $containerConfigurator->import(__DIR__ . '/tools/coding-standards/vendor/lmc/coding-standard/ecs-8.1.php');
 };

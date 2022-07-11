@@ -6,10 +6,7 @@ use function Safe\parse_url;
 
 class Url
 {
-    /**
-     * @param array|object $params
-     */
-    public static function buildQuery($params): string
+    public static function buildQuery(array|object $params): string
     {
         return http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
@@ -39,7 +36,7 @@ class Url
     public static function removeParam(string $url, string $param): string
     {
         $urlParts = parse_url($url);
-        if (isset($urlParts['query'])) {
+        if (is_array($urlParts) && array_key_exists('query', $urlParts)) {
             parse_str($urlParts['query'], $parameters);
             if (array_key_exists($param, $parameters)) {
                 unset($parameters[$param]);
@@ -60,7 +57,7 @@ class Url
     {
         $queryStringPart = parse_url($url, PHP_URL_QUERY);
 
-        if ($queryStringPart) {
+        if (is_string($queryStringPart)) {
             parse_str($queryStringPart, $queryParams);
 
             return $queryParams;

@@ -76,7 +76,7 @@ class HtmlHelperTest extends TestCase
         string $tag,
         array $parameters,
         bool $isSingleTag,
-        string $expected
+        string $expected,
     ): void {
         $this->assertSame($expected, $this->htmlHelper->transformToTag($tag, $parameters, $isSingleTag));
     }
@@ -240,7 +240,7 @@ class HtmlHelperTest extends TestCase
         string $content,
         string $replacement,
         ?string $search,
-        string $expectedContent
+        string $expectedContent,
     ): void {
         $this->assertSame($expectedContent, $this->htmlHelper->insertAfterFirst($content, $replacement, $search));
     }
@@ -276,7 +276,7 @@ class HtmlHelperTest extends TestCase
         string $content,
         string $replacement,
         string $search,
-        string $expectedContent
+        string $expectedContent,
     ): void {
         $this->assertSame($expectedContent, $this->htmlHelper->insertAfterLast($content, $replacement, $search));
     }
@@ -285,7 +285,8 @@ class HtmlHelperTest extends TestCase
     {
         return [
             // content, replacement, search for, expected replaced content
-            'no occurrence' => ['there is nothing to replace', ':(', '', 'there is nothing to replace'],
+            'no occurrence - empty string' => ['there is nothing to replace', ':(', '', 'there is nothing to replace'],
+            'no occurrence' => ['there is nothing to replace', ':(', 'X', 'there is nothing to replace'],
             'one' => ['john snow is not dead', 'board', 'snow', 'john snowboard is not dead'],
             'two' => ['john snow eats snow', 'board', 'snow', 'john snow eats snowboard'],
             'html with mb characters' => [

@@ -3,7 +3,6 @@
 namespace VysokeSkoly\UtilsBundle\Service;
 
 use function Safe\preg_match;
-use function Safe\usort;
 
 class StringUtils
 {
@@ -113,9 +112,7 @@ class StringUtils
         if ($index === '') {
             $collator->sort($toSort);
         } else {
-            usort($toSort, function ($a, $b) use ($collator, $index) {
-                return $collator->compare($a[$index], $b[$index]);
-            });
+            usort($toSort, fn ($a, $b) => (int) $collator->compare($a[$index], $b[$index]));
         }
 
         return $toSort;
@@ -128,29 +125,17 @@ class StringUtils
 
     public static function startsWith(string $haystack, string $needle): bool
     {
-        $needleLength = mb_strlen($needle);
-
-        if ($needleLength == 0) {
-            return true;
-        }
-
-        return mb_substr($haystack, 0, $needleLength) == $needle;
+        return str_starts_with($haystack, $needle);
     }
 
     public static function endsWith(string $haystack, string $needle): bool
     {
-        $needleLength = mb_strlen($needle);
-
-        if ($needleLength == 0) {
-            return true;
-        }
-
-        return mb_substr($haystack, -$needleLength) == $needle;
+        return str_ends_with($haystack, $needle);
     }
 
-    public static function contains(string $heystack, string $needle): bool
+    public static function contains(string $haystack, string $needle): bool
     {
-        return mb_strpos($heystack, $needle) !== false;
+        return str_contains($haystack, $needle);
     }
 
     public static function getFirstLetter(string $string): string

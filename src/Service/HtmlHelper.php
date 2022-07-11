@@ -145,6 +145,10 @@ class HtmlHelper
 
     public function insertAfterLast(string $content, string $textToInsert, string $search): string
     {
+        if (empty($search)) {
+            return $content;
+        }
+
         // intentional use of strpos and strlen because of substr_replace is not multi-byte
         $position = strrpos($content, $search);
 

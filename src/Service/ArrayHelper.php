@@ -37,10 +37,7 @@ class ArrayHelper
         return $alphabetically;
     }
 
-    /**
-     * @return mixed
-     */
-    public static function getLastButOne(array $array)
+    public static function getLastButOne(array $array): mixed
     {
         $count = count($array);
 

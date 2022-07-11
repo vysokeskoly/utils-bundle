@@ -30,7 +30,7 @@ class DebugLevelTest extends TestCase
         int $level,
         int $expectedLevel,
         bool $isDebug,
-        bool $isCacheEnabled
+        bool $isCacheEnabled,
     ): void {
         $this->debugLevel->setLevel($level);
 
