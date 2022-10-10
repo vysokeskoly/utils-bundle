@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 7.1.0 - 2022-10-10
 - Add mime-type constants to `Image`
 
 ## 7.0.0 - 2022-07-11
