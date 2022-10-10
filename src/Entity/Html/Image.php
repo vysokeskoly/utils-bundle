@@ -8,6 +8,11 @@ class Image
 {
     public const REQUIRED_KEYS = ['src', 'alt'];
 
+    public const MIME_JPEG = 'image/jpeg';
+    public const MIME_PNG = 'image/png';
+    public const MIME_GIF = 'image/gif';
+    public const MIME_BMP = 'image/bmp';
+
     private array $parameters;
     private bool $isValid = true;
 
@@ -16,11 +21,11 @@ class Image
         [$extension] = explode(' ', $extension, 2);
 
         $mimetypes = [
-            'jpg' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
-            'gif' => 'image/gif',
-            'bmp' => 'image/bmp',
+            'jpg' => self::MIME_JPEG,
+            'jpeg' => self::MIME_JPEG,
+            'png' => self::MIME_PNG,
+            'gif' => self::MIME_GIF,
+            'bmp' => self::MIME_BMP,
         ];
 
         return $mimetypes[$extension] ?? 'image/*';  // https://superuser.com/questions/979135/is-there-a-generic-mime-type-for-all-image-files

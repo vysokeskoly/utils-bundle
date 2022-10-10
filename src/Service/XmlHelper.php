@@ -66,9 +66,9 @@ class XmlHelper
     public static function sanitizeXml(string $xml): string
     {
         $output = '';
-        $xmlLenght = strlen($xml);  // intentional use of strlen instead of mb_strlen
+        $xmlLength = strlen($xml);  // intentional use of strlen instead of mb_strlen
 
-        for ($i = 0; $i < $xmlLenght; $i++) {
+        for ($i = 0; $i < $xmlLength; $i++) {
             $current = ord($xml[$i]);
             if (($current == 0x9) || ($current == 0xA) || ($current == 0xD)
                 || (($current >= 0x20) && ($current <= 0xD7FF))
