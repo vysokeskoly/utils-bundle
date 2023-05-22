@@ -2,8 +2,6 @@
 
 namespace VysokeSkoly\UtilsBundle\Service;
 
-use function Safe\sprintf;
-
 class LinkPlaceholderTransformer
 {
     public function transformToPlaceholder(string $content): string
