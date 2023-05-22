@@ -23,7 +23,13 @@ class HtmlHelperTest extends TestCase
      */
     public function testShouldGetImages(string $content, array $expectedImages): void
     {
-        $this->assertEquals($expectedImages, $this->htmlHelper->findAllImages($content));
+        $images = $this->htmlHelper->findAllImages($content);
+
+        $this->assertEquals($expectedImages, $images);
+
+        foreach (array_keys($images) as $needle) {
+            $this->assertStringContainsString($needle, $content);
+        }
     }
 
     public function imagesProvider(): array
@@ -64,6 +70,59 @@ class HtmlHelperTest extends TestCase
                 [
                     ' src="image.jpg" alt="1"' => new Image(['src' => 'image.jpg', 'alt' => '1']),
                     ' height="200" src="image2.jpg" /' => new Image(['height' => '200', 'src' => 'image2.jpg']),
+                ],
+            ],
+            'many images lined' => [
+                '<div>
+                    content
+                    <img decoding="async"
+                         loading="lazy"
+                         src="https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-618x348.jpeg"
+                         alt=""
+                         class="wp-image-19"
+                         width="650"
+                         height="366"
+                         srcset="https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-618x348.jpeg 618w, https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-596x335.jpeg 596w"
+                         sizes="(max-width: 650px) 100vw, 650px" />
+                </div>
+                <p>
+                    <img 
+                        height="200" src="image2.jpg"
+                        alt="image 2" 
+                    />
+                </p>',
+                [
+                    ' decoding="async"
+                         loading="lazy"
+                         src="https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-618x348.jpeg"
+                         alt=""
+                         class="wp-image-19"
+                         width="650"
+                         height="366"
+                         srcset="https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-618x348.jpeg 618w, https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-596x335.jpeg 596w"
+                         sizes="(max-width: 650px) 100vw, 650px" /' => new Image(
+                        [
+                            'decoding' => 'async',
+                            'loading' => 'lazy',
+                            'src' => 'https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-618x348.jpeg',
+                            'alt' => '',
+                            'class' => 'wp-image-19',
+                            'width' => '650',
+                            'height' => '366',
+                            'srcset' => 'https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-618x348.jpeg 618w, https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-596x335.jpeg 596w',
+                            'sizes' => '(max-width: 650px) 100vw, 650px',
+                        ],
+                    ),
+                    ' 
+                        height="200" src="image2.jpg"
+                        alt="image 2" 
+                    /' => new Image(
+                        [
+                            'height' => '200',
+                            'src' => 'image2.jpg',
+                            'alt' => 'image 2',
+                        ],
+                    ),
                 ],
             ],
         ];
@@ -125,7 +184,13 @@ class HtmlHelperTest extends TestCase
      */
     public function testShouldGetAllLinksFromContent(string $content, array $expectedLinks): void
     {
-        $this->assertEquals($expectedLinks, $this->htmlHelper->findAllLinks($content));
+        $links = $this->htmlHelper->findAllLinks($content);
+
+        $this->assertEquals($expectedLinks, $links);
+
+        foreach (array_keys($links) as $needle) {
+            $this->assertStringContainsString($needle, $content);
+        }
     }
 
     public function linksProvider(): array
@@ -189,28 +254,35 @@ class HtmlHelperTest extends TestCase
                 ],
             ],
             'empty link' => ['<div>content<a>Foo</a></div>', []],
-        ];
-    }
-
-    /**
-     * @dataProvider provideUnsupportedLinks
-     */
-    public function testShouldNotGetAllLinksFromContent(string $content, array $expectedLinks): void
-    {
-        // this test shows unsupported link format to explicitly show what is not supported
-        $this->assertNotEquals($expectedLinks, $this->htmlHelper->findAllLinks($content));
-    }
-
-    public function provideUnsupportedLinks(): array
-    {
-        return [
-            // content, expected
             'with one link without a quotes but with class' => [
                 '<div>content<a href=https://www.vysokeskoly.cz class="active"></div>',
                 [
                     ' href=https://www.vysokeskoly.cz class="active"' => new Link([
                         'href' => 'https://www.vysokeskoly.cz',
                         'class' => 'active',
+                    ]),
+                ],
+            ],
+            'with multi line link' => [
+                '<div>
+                    content
+                    <a 
+                        href=https://www.vysokeskoly.cz 
+                        class="active"
+                        title="Homepage"
+                    >
+                        Homepage
+                    </a>
+                </div>',
+                [
+                    ' 
+                        href=https://www.vysokeskoly.cz 
+                        class="active"
+                        title="Homepage"
+                    ' => new Link([
+                        'href' => 'https://www.vysokeskoly.cz',
+                        'class' => 'active',
+                        'title' => 'Homepage',
                     ]),
                 ],
             ],

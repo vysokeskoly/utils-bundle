@@ -2,7 +2,9 @@
 
 namespace VysokeSkoly\UtilsBundle\Entity\Html;
 
-use function Safe\ksort;
+use MF\Collection\Immutable\Generic\KVPair;
+use MF\Collection\Immutable\Generic\ListCollection;
+use MF\Collection\Immutable\Generic\Map;
 
 class Image
 {
@@ -29,6 +31,15 @@ class Image
         ];
 
         return $mimetypes[$extension] ?? 'image/*';  // https://superuser.com/questions/979135/is-there-a-generic-mime-type-for-all-image-files
+    }
+
+    public static function fromDomElement(\DOMElement $element): self
+    {
+        $parameters = Map::fromPairs(
+            ListCollection::create($element->attributes, fn (\DOMAttr $attr) => new KVPair($attr->name, $attr->value)),
+        );
+
+        return new self($parameters->toArray());
     }
 
     public function __construct(array $parameters)

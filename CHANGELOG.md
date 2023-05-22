@@ -2,6 +2,11 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+- Allow to parse multi-line html for
+  - `HtmlHelper::findAllImages`
+  - `HtmlHelper::findAllLinks`
+- Add `HtmlHelper::xpathHtmlDocument` method
+  - Require `ext-dom` extension
 
 ## 7.1.0 - 2022-10-10
 - Add mime-type constants to `Image`

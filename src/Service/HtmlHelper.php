@@ -2,78 +2,95 @@
 
 namespace VysokeSkoly\UtilsBundle\Service;
 
-use Assert\Assertion;
-use function Safe\array_combine;
+use MF\Collection\Immutable\Generic\ISeq;
+use MF\Collection\Immutable\Generic\Seq;
 use function Safe\preg_match_all;
-use function Safe\sprintf;
 use VysokeSkoly\UtilsBundle\Entity\Html\Image;
 use VysokeSkoly\UtilsBundle\Entity\Html\Link;
 
 class HtmlHelper
 {
+    private const EOL_PLACEHOLDER = '@*@';
     private const TEMPLATE_SINGLE_TAG = '<%s %s />';
     private const TEMPLATE_PAIR_TAG = '<%s %s>';
+
+    /**
+     * @see https://stackoverflow.com/questions/18349130/how-to-parse-html-in-php
+     * @example // span[@class='".$class."']
+     * @example // img
+     *
+     * @phpstan-return ISeq<\DOMElement>
+     */
+    public function xpathHtmlDocument(string $content, string $xpathQuery): ISeq
+    {
+        return Seq::init(function () use ($xpathQuery, $content) {
+            $dom = new \DOMDocument();
+            // @see https://www.php.net/manual/en/domdocument.loadhtml.php#95251
+            $dom->loadHTML(sprintf('<?xml encoding="UTF-8">%s', $content));
+            $xpath = new \DOMXPath($dom);
+
+            $elements = $xpath->query($xpathQuery);
+
+            if ($elements instanceof \DOMNodeList) {
+                yield from $elements;
+            }
+        });
+    }
 
     /**
      * @return Image[]
      */
     public function findAllImages(string $content): array
     {
-        preg_match_all('/<img(.*?)>/', $content, $matches);
-
-        return $this->mapMatches(array_pop($matches), function (array $parameters) {
-            return new Image($parameters);
-        });
+        return $this->findAllTags('img', 'src', $content, Image::fromDomElement(...));
     }
 
     /**
-     * @return array [match => generatedEntity]
+     * @phpstan-template Tag
+     *
+     * @phpstan-param callable(\DOMElement): Tag $createTag
+     * @phpstan-return Tag[]
      */
-    private function mapMatches(array $matches, callable $generator): array
+    private function findAllTags(string $tag, string $requiredAttr, string $content, callable $createTag): array
     {
-        $values = array_map(function ($entityString) use ($generator) {
-            $parts = explode('" ', $this->normalize($entityString));
-            $parameters = [];
+        $mappedContent = str_replace("\n", self::EOL_PLACEHOLDER, $content);
+        preg_match_all(sprintf('/<%s(.*?)>/', $tag), $mappedContent, $matches);
 
-            foreach ($parts as $part) {
-                if (mb_strpos($part, '="') !== false) {
-                    [$key, $value] = explode('=', $part, 2);
-                } else {
-                    $key = $part;
-                    $value = '';
-                }
-
-                if ($key === '/') {
-                    continue;
-                }
-
-                $parameters[$key] = $this->trimParameter($value);
-            }
-
-            return call_user_func($generator, $parameters);
-        }, $matches);
-
-        return array_combine(array_values($matches), $values);
+        return $this->mapMatches(
+            $this->mapEoLPlaceholders(array_pop($matches)),
+            $this->xpathHtmlDocument($content, sprintf('//%s[@%s]', $tag, $requiredAttr)),
+            $createTag,
+        );
     }
 
-    private function normalize(string $matchValue): string
+    /**
+     * @phpstan-template T
+     *
+     * @phpstan-param string[] $matches
+     * @phpstan-param ISeq<\DOMElement> $elements
+     * @phpstan-param callable(\DOMElement): T $mapper
+     *
+     * @return array<string, T> [match => T]
+     */
+    private function mapMatches(array $matches, ISeq $elements, callable $mapper): array
     {
-        $replaces = [
-            "\t" => '',
-            "='" => '="',
-            "' " => '" ',
-        ];
+        $values = $elements
+            ->map($mapper)
+            ->toArray();
 
-        $normalized = trim(strtr($matchValue, $replaces));
-
-        // strtr replaces only ' with next atribute (field='...' next='...')
-        // but to fix the last one, we need to do separately with regex
-        return RegexHelper::pregReplace('/\'$/', '"', $normalized);
+        return array_combine(array_filter(array_values($matches)), $values);
     }
 
-    private function trimParameter(string $value): string
+    private function mapEoLPlaceholders(array $values): array
     {
-        return trim($value, '"');
+        return array_map($this->mapEoL(...), $values);
+    }
+
+    private function mapEoL(mixed $value): mixed
+    {
+        return is_string($value)
+            ? str_replace(self::EOL_PLACEHOLDER, "\n", $value)
+            : $value;
     }
 
     public function transformToTag(string $tag, array $parameters, bool $isSingleTag): string
@@ -101,28 +118,7 @@ class HtmlHelper
      */
     public function findAllLinks(string $content): array
     {
-        preg_match_all('/<a( {1}.*?)>/', $content, $matches);
-
-        return $this->mapMatches(array_pop($matches), function (array $parameters) {
-            Assertion::notEmpty($parameters);
-
-            if (!array_key_exists('href', $parameters)) {
-                $originalParameters = $parameters;
-                $parameters = [];
-
-                foreach ($originalParameters as $key => $value) {
-                    if (StringUtils::contains($key, 'href') && StringUtils::contains($key, '=')) {
-                        [, $href] = explode('=', $key, 2);
-
-                        $parameters['href'] = $href;
-                    } else {
-                        $parameters[$key] = $value;
-                    }
-                }
-            }
-
-            return new Link($parameters);
-        });
+        return $this->findAllTags('a', 'href', $content, Link::fromDomElement(...));
     }
 
     public function findAllParagraphs(string $content): array
