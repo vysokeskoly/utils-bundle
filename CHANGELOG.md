@@ -2,6 +2,7 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+- Support `figure` html tag in `HtmlHelper::xpathHtmlDocument` method
 
 ## 7.2.0 - 2023-05-22
 - Allow to parse multi-line html for

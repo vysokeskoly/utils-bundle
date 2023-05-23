@@ -73,7 +73,7 @@ class HtmlHelperTest extends TestCase
                 ],
             ],
             'many images lined' => [
-                '<div>
+                '<figure class="wp-block-image size-large is-resized">
                     content
                     <img decoding="async"
                          loading="lazy"
@@ -84,7 +84,7 @@ class HtmlHelperTest extends TestCase
                          height="366"
                          srcset="https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-618x348.jpeg 618w, https://cdn.vysokeskoly.cz/vysokeskolyuk/new/uploads/2023/03/diablo-4-1920-1080-596x335.jpeg 596w"
                          sizes="(max-width: 650px) 100vw, 650px" />
-                </div>
+                </figure>
                 <p>
                     <img 
                         height="200" src="image2.jpg"
@@ -264,7 +264,7 @@ class HtmlHelperTest extends TestCase
                 ],
             ],
             'with multi line link' => [
-                '<div>
+                '<figure class="wp-block-image size-large is-resized">
                     content
                     <a 
                         href=https://www.vysokeskoly.cz 
@@ -273,7 +273,7 @@ class HtmlHelperTest extends TestCase
                     >
                         Homepage
                     </a>
-                </div>',
+                </figure>',
                 [
                     ' 
                         href=https://www.vysokeskoly.cz 
