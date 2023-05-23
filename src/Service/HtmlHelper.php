@@ -3,6 +3,7 @@
 namespace VysokeSkoly\UtilsBundle\Service;
 
 use MF\Collection\Immutable\Generic\ISeq;
+use MF\Collection\Immutable\Generic\Map;
 use MF\Collection\Immutable\Generic\Seq;
 use function Safe\preg_match_all;
 use VysokeSkoly\UtilsBundle\Entity\Html\Image;
@@ -24,17 +25,41 @@ class HtmlHelper
     public function xpathHtmlDocument(string $content, string $xpathQuery): ISeq
     {
         return Seq::init(function () use ($xpathQuery, $content) {
-            $dom = new \DOMDocument();
-            // @see https://www.php.net/manual/en/domdocument.loadhtml.php#95251
-            $dom->loadHTML(sprintf('<?xml encoding="UTF-8">%s', $content));
-            $xpath = new \DOMXPath($dom);
+            $htmlContent = $this->transformUnsupportedHtml($content);
 
+            // @see https://www.php.net/manual/en/domdocument.loadhtml.php#95251
+            $dom = new \DOMDocument();
+            $dom->loadHTML(sprintf('<?xml encoding="UTF-8">%s', $htmlContent));
+
+            $xpath = new \DOMXPath($dom);
             $elements = $xpath->query($xpathQuery);
 
             if ($elements instanceof \DOMNodeList) {
                 yield from $elements;
             }
         });
+    }
+
+    private function transformUnsupportedHtml(string $originalContent): string
+    {
+        $unsupportedTags = Map::from([
+            'figure' => [
+                'start' => '<div data-tag-type-replacement="figure"',
+                'end' => '</div',
+            ],
+        ]);
+
+        $content = $unsupportedTags
+            ->reduce(
+                fn (string $acc, array $value, int|string $key = null) => str_replace(
+                    ['<' . $key, '</' . $key],
+                    [$value['start'], $value['end']],
+                    $acc,
+                ),
+                $originalContent,
+            );
+
+        return $content;
     }
 
     /**
