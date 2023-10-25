@@ -26,6 +26,7 @@ class HtmlHelper
     {
         return Seq::init(function () use ($xpathQuery, $content) {
             $htmlContent = $this->transformUnsupportedHtml($content);
+            $htmlContent = $this->encodeHtml($htmlContent);
 
             // @see https://www.php.net/manual/en/domdocument.loadhtml.php#95251
             $dom = new \DOMDocument();
@@ -38,6 +39,20 @@ class HtmlHelper
                 yield from $elements;
             }
         });
+    }
+
+    /**
+     * @see https://stackoverflow.com/questions/1685277/warning-domdocumentloadhtml-htmlparseentityref-expecting-in-entity
+     *
+     * It is meant to encode html entities, which would otherwise break the DOMDocument::loadHTML() method.
+     */
+    private function encodeHtml(string $content): string
+    {
+        return str_replace(
+            ['&gt;', '&lt;'],
+            ['>', '<'],
+            htmlentities($content, ENT_NOQUOTES, 'UTF-8', false),
+        );
     }
 
     private function transformUnsupportedHtml(string $originalContent): string

@@ -263,6 +263,24 @@ class HtmlHelperTest extends TestCase
                     ]),
                 ],
             ],
+            'with one link containing not encoded entities' => [
+                '<div>content<a href="https://www.vysokeskoly.cz?param1=1&param2=2" class="active"></div>',
+                [
+                    ' href="https://www.vysokeskoly.cz?param1=1&param2=2" class="active"' => new Link([
+                        'href' => 'https://www.vysokeskoly.cz?param1=1&param2=2',
+                        'class' => 'active',
+                    ]),
+                ],
+            ],
+            'with one link containing both encoded and not encoded entities' => [
+                '<div>content<a href="https://www.vysokeskoly.cz?param1=1&param2=2&amp;param3=3" class="active"></div>',
+                [
+                    ' href="https://www.vysokeskoly.cz?param1=1&param2=2&amp;param3=3" class="active"' => new Link([
+                        'href' => 'https://www.vysokeskoly.cz?param1=1&param2=2&param3=3',
+                        'class' => 'active',
+                    ]),
+                ],
+            ],
             'with multi line link' => [
                 '<figure class="wp-block-image size-large is-resized">
                     content
