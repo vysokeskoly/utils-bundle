@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 7.4.0 - 2023-10-25
 - Encode html entities in `HtmlHelper` to prevent parse errors
 
 ## 7.3.0 - 2023-05-23
