@@ -2,6 +2,7 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+- Encode html entities in `HtmlHelper` to prevent parse errors
 
 ## 7.3.0 - 2023-05-23
 - Support `figure` html tag in `HtmlHelper::xpathHtmlDocument` method
