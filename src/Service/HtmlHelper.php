@@ -94,7 +94,7 @@ class HtmlHelper
     private function findAllTags(string $tag, string $requiredAttr, string $content, callable $createTag): array
     {
         $mappedContent = str_replace("\n", self::EOL_PLACEHOLDER, $content);
-        preg_match_all(sprintf('/<%s(.*?)>/', $tag), $mappedContent, $matches);
+        preg_match_all(sprintf('/<%s( .*?)>/', $tag), $mappedContent, $matches);
 
         return $this->mapMatches(
             $this->mapEoLPlaceholders(array_pop($matches)),
