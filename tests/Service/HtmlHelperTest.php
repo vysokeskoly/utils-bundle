@@ -308,6 +308,24 @@ class HtmlHelperTest extends TestCase
                     ]),
                 ],
             ],
+            'with encoded links' => [
+                '<div>
+                    Napište nám <a href="mailto:info@vysokeskoly.cz">info@vysokeskoly.cz</a>
+                    Toto vložte do svých stránek:
+                    <table class="table half-standalone">
+                        <tbody>
+                            <tr>
+                                <td>&lt;div class="frame"&gt; &lt;script type="text/javascript" src="http://www.vysokeskoly.cz/frame/bigy" charset="utf-8"&gt;&lt;/script&gt; &lt;p&gt;&lt;a href="http://www.vysokeskoly.cz" title="Vysokeskoly.cz"&gt;www.vysokeskoly.cz&lt;/a&gt;&lt;/p&gt; &lt;/div&gt;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>',
+                [
+                    ' href="mailto:info@vysokeskoly.cz"' => new Link([
+                        'href' => 'mailto:info@vysokeskoly.cz',
+                    ]),
+                ],
+            ],
         ];
     }
 

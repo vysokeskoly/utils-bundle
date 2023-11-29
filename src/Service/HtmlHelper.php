@@ -8,6 +8,8 @@ use MF\Collection\Immutable\Generic\Seq;
 use function Safe\preg_match_all;
 use VysokeSkoly\UtilsBundle\Entity\Html\Image;
 use VysokeSkoly\UtilsBundle\Entity\Html\Link;
+use VysokeSkoly\UtilsBundle\Exception\FindHtmlTagException;
+use VysokeSkoly\UtilsBundle\Exception\UnexpectedKeyValueCountInFindHtmlTagException;
 
 class HtmlHelper
 {
@@ -112,13 +114,69 @@ class HtmlHelper
      *
      * @return array<string, T> [match => T]
      */
-    private function mapMatches(array $matches, ISeq $elements, callable $mapper): array
-    {
+    private function mapMatches(
+        array $matches,
+        ISeq $elements,
+        callable $mapper,
+        bool $tryingWithMatchingAttributes = false,
+    ): array {
+        $keys = array_filter(array_values($matches));
         $values = $elements
             ->map($mapper)
             ->toArray();
 
-        return array_combine(array_filter(array_values($matches)), $values);
+        // var_dump(['matches' => $matches, 'values' => $values, 'keys' => $keys]); // left for debug
+
+        try {
+            if (count($keys) === count($values)) {
+                return array_combine($keys, $values);
+            } elseif (count($keys) < count($values) && !$tryingWithMatchingAttributes) {
+                $isMatchingElement = $this->createFilterWithMatchingAttributes($matches);
+
+                return $this->mapMatches($matches, $elements->filter($isMatchingElement), $mapper, true);
+            }
+
+            throw new UnexpectedKeyValueCountInFindHtmlTagException();
+        } catch (\Throwable $e) {
+            throw new FindHtmlTagException(
+                'While mapping matches, there was thrown an exception.',
+                $e,
+                $keys,
+                $values,
+                $tryingWithMatchingAttributes,
+            );
+        }
+    }
+
+    /**
+     * It will create a filter function, which ensures that elements passing are matching some of the given matches.
+     * It will only check the attributes (href|src), which are present in the matches.
+     *
+     * @phpstan-return callable(\DOMElement): bool
+     */
+    private function createFilterWithMatchingAttributes(array $matches): callable
+    {
+        $matchesKeys = Seq::init(function () use ($matches) {
+            foreach ($matches as $match) {
+                preg_match('/(href|src)=(".*?"|\'.*?\')/', $match, $attribute);
+
+                if (!empty($attribute[1]) && !empty($attribute[2])) {
+                    yield ['key' => $attribute[1], 'value' => trim($attribute[2], '"\'')];
+                }
+            }
+        })
+            ->toList();
+
+        // var_dump(['matchesKeys' => $matchesKeys->toArray()]); // left for debug
+
+        return fn (\DOMElement $element) => $matchesKeys
+            ->reduce(
+                fn (bool $acc, array $attribute) => $acc || (
+                    $element->hasAttribute($attribute['key']) &&
+                    $element->getAttribute($attribute['key']) === $attribute['value']
+                ),
+                false,
+            );
     }
 
     private function mapEoLPlaceholders(array $values): array
