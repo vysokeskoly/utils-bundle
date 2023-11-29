@@ -201,6 +201,10 @@ class HtmlHelperTest extends TestCase
                 '<div>content</div>',
                 [],
             ],
+            'with similar tag' => [
+                '<div><address>content</address></div>',
+                [],
+            ],
             'with one link' => [
                 '<div>content<a href="$$slovnik:prezencni-studium$$"></a></div>',
                 [
