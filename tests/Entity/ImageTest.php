@@ -18,7 +18,7 @@ class ImageTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function provideExtension(): array
+    public static function provideExtension(): array
     {
         return [
             // extension, expected mime type

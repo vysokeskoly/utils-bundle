@@ -25,7 +25,7 @@ class UrlTest extends TestCase
         $this->assertEquals($expectedUrl, Url::buildUrlWithParams($url, $params));
     }
 
-    public function provideUrlForBuild(): array
+    public static function provideUrlForBuild(): array
     {
         return [
             // url without params in it and without additional params
@@ -53,7 +53,7 @@ class UrlTest extends TestCase
         $this->assertSame($expectedUrl, Url::removeParam($originalUrl, $parameterToRemove));
     }
 
-    public function provideParameterForRemove(): array
+    public static function provideParameterForRemove(): array
     {
         return [
             // Standard URL with primitive param to be removed from multiple parameters
@@ -97,7 +97,7 @@ class UrlTest extends TestCase
         $this->assertSame($expectedValue, Url::getParams($url));
     }
 
-    public function provideUrlParameter(): array
+    public static function provideUrlParameter(): array
     {
         return [
             ['http://www.vysokeskoly.cz/search/?foo=bar', ['foo' => 'bar']],

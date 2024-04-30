@@ -19,7 +19,7 @@ class ArrayHelperTest extends TestCase
         $this->assertEquals($expected, ArrayHelper::getAlphabeticalList($items, $column));
     }
 
-    public function provideAplhabeticalList(): array
+    public static function provideAplhabeticalList(): array
     {
         return [
             // items, column, expected

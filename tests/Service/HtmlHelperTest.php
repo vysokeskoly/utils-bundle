@@ -19,7 +19,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider imagesProvider
+     * @dataProvider provideImages
      */
     public function testShouldGetImages(string $content, array $expectedImages): void
     {
@@ -32,7 +32,7 @@ class HtmlHelperTest extends TestCase
         }
     }
 
-    public function imagesProvider(): array
+    public static function provideImages(): array
     {
         return [
             // content, imageSources
@@ -125,11 +125,28 @@ class HtmlHelperTest extends TestCase
                     ),
                 ],
             ],
+            'html with warning' => [
+                '<p>Text</strong></p>
+                <h3><strong><a title="Průzkum: Studium za pandemie" href="https://go.minute.app/#R/studovatzapandemie" target="_blank" rel="noopener">&gt;&gt; ZAPOJIT SE DO PRŮZKUMU ZDE &lt;&lt;</a></strong></h3>
+                <p>Text 2.</p>
+                <p><img class="wp-image-30584 alignleft" src="http://vs-admin.prod/wp-content/uploads/2021/05/apple-min_600.png" alt="apple-vyhra_vysokeskoly" width="294" height="321" /><br />Text:  with space</p>',
+                [
+                    ' class="wp-image-30584 alignleft" src="http://vs-admin.prod/wp-content/uploads/2021/05/apple-min_600.png" alt="apple-vyhra_vysokeskoly" width="294" height="321" /' => new Image(
+                        [
+                            'class' => 'wp-image-30584 alignleft',
+                            'src' => 'http://vs-admin.prod/wp-content/uploads/2021/05/apple-min_600.png',
+                            'alt' => 'apple-vyhra_vysokeskoly',
+                            'width' => '294',
+                            'height' => '321',
+                        ],
+                    ),
+                ],
+            ],
         ];
     }
 
     /**
-     * @dataProvider tagProvider
+     * @dataProvider provideTags
      */
     public function testShouldTransformToHtmlTag(
         string $tag,
@@ -140,7 +157,7 @@ class HtmlHelperTest extends TestCase
         $this->assertSame($expected, $this->htmlHelper->transformToTag($tag, $parameters, $isSingleTag));
     }
 
-    public function tagProvider(): array
+    public static function provideTags(): array
     {
         return [
             // tag, parameters, isSingleTag, expected
@@ -180,7 +197,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider linksProvider
+     * @dataProvider provideLinks
      */
     public function testShouldGetAllLinksFromContent(string $content, array $expectedLinks): void
     {
@@ -193,7 +210,7 @@ class HtmlHelperTest extends TestCase
         }
     }
 
-    public function linksProvider(): array
+    public static function provideLinks(): array
     {
         return [
             // content, expectedLinks
@@ -346,7 +363,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider firstReplacementProvider
+     * @dataProvider provideFirstReplacement
      */
     public function testShouldInsertTextAfterFirstOccurrence(
         string $content,
@@ -357,7 +374,7 @@ class HtmlHelperTest extends TestCase
         $this->assertSame($expectedContent, $this->htmlHelper->insertAfterFirst($content, $replacement, $search));
     }
 
-    public function firstReplacementProvider(): array
+    public static function provideFirstReplacement(): array
     {
         return [
             // content, replacement, search for, expected replaced content
@@ -371,8 +388,8 @@ class HtmlHelperTest extends TestCase
                     '<p> </p>' .
                     '<p>Last paragraph</p>',
                 'replacement' => '{-top-}',
-                'search for' => '<p> </p>',
-                'expected' => '<p>Žluťoučký kůň se pase 🐴</p>' .
+                'search' => '<p> </p>',
+                'expectedContent' => '<p>Žluťoučký kůň se pase 🐴</p>' .
                     '<p> </p>{-top-}' .
                     '<p>Second paragraph</p>' .
                     '<p> </p>' .
@@ -382,7 +399,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider lastReplacementProvider
+     * @dataProvider provideLastReplacement
      */
     public function testShouldInsertTextAfterLastOccurrence(
         string $content,
@@ -393,7 +410,7 @@ class HtmlHelperTest extends TestCase
         $this->assertSame($expectedContent, $this->htmlHelper->insertAfterLast($content, $replacement, $search));
     }
 
-    public function lastReplacementProvider(): array
+    public static function provideLastReplacement(): array
     {
         return [
             // content, replacement, search for, expected replaced content
@@ -408,8 +425,8 @@ class HtmlHelperTest extends TestCase
                     '<p> </p>' .
                     '<p>Last paragraph</p>',
                 'replacement' => '{-bottom-}',
-                'search for' => '<p> </p>',
-                'expected' => '<p>Žluťoučký kůň se pase 🐴</p>' .
+                'search' => '<p> </p>',
+                'expectedContent' => '<p>Žluťoučký kůň se pase 🐴</p>' .
                     '<p> </p>' .
                     '<p>Second paragraph</p>' .
                     '<p> </p>{-bottom-}' .

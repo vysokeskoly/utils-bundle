@@ -16,7 +16,7 @@ class RegexHelperTest extends TestCase
         $this->assertSame($expected, RegexHelper::parse($string, $pattern));
     }
 
-    public function provideToParse(): array
+    public static function provideToParse(): array
     {
         return [
             'empty' => ['', '/(w+)/', null],

@@ -39,7 +39,7 @@ class DebugLevelTest extends TestCase
         $this->assertSame($isCacheEnabled, $this->debugLevel->isCacheEnabled());
     }
 
-    public function provideLevel(): array
+    public static function provideLevel(): array
     {
         return [
             // debug level, expected debug level, is debug?, is cache enabled?
