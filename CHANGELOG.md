@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 7.6.0 - 2024-04-30
 - Ignore warning in parsing HTML
 
 ## 7.5.0 - 2023-11-29
