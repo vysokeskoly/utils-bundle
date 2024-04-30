@@ -125,6 +125,23 @@ class HtmlHelperTest extends TestCase
                     ),
                 ],
             ],
+            'html with warning' => [
+                '<p>Text</strong></p>
+                <h3><strong><a title="Průzkum: Studium za pandemie" href="https://go.minute.app/#R/studovatzapandemie" target="_blank" rel="noopener">&gt;&gt; ZAPOJIT SE DO PRŮZKUMU ZDE &lt;&lt;</a></strong></h3>
+                <p>Text 2.</p>
+                <p><img class="wp-image-30584 alignleft" src="http://vs-admin.prod/wp-content/uploads/2021/05/apple-min_600.png" alt="apple-vyhra_vysokeskoly" width="294" height="321" /><br />Text:  with space</p>',
+                [
+                    ' class="wp-image-30584 alignleft" src="http://vs-admin.prod/wp-content/uploads/2021/05/apple-min_600.png" alt="apple-vyhra_vysokeskoly" width="294" height="321" /' => new Image(
+                        [
+                            'class' => 'wp-image-30584 alignleft',
+                            'src' => 'http://vs-admin.prod/wp-content/uploads/2021/05/apple-min_600.png',
+                            'alt' => 'apple-vyhra_vysokeskoly',
+                            'width' => '294',
+                            'height' => '321',
+                        ],
+                    ),
+                ],
+            ],
         ];
     }
 

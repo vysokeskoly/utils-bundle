@@ -2,6 +2,7 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+- Ignore warning in parsing HTML
 
 ## 7.5.0 - 2023-11-29
 - Fix finding html tags when there are encoded html entities

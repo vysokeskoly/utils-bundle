@@ -30,6 +30,9 @@ class HtmlHelper
             $htmlContent = $this->transformUnsupportedHtml($content);
             $htmlContent = $this->encodeHtml($htmlContent);
 
+            // @see https://stackoverflow.com/questions/11819603/domdocument-loadhtml-doesnt-work-properly-on-a-server
+            $previously = libxml_use_internal_errors(true);
+
             // @see https://www.php.net/manual/en/domdocument.loadhtml.php#95251
             $dom = new \DOMDocument();
             $dom->loadHTML(sprintf('<?xml encoding="UTF-8">%s', $htmlContent));
