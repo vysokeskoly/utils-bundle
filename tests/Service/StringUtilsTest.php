@@ -47,7 +47,7 @@ class StringUtilsTest extends TestCase
         }
     }
 
-    public function provideEmail(): array
+    public static function provideEmail(): array
     {
         return [
             ['email@domain.com', true],
@@ -89,7 +89,7 @@ class StringUtilsTest extends TestCase
         $this->assertEquals($expected, StringUtils::formatPhoneNumber($given));
     }
 
-    public function providePhoneNumbers(): array
+    public static function providePhoneNumbers(): array
     {
         return [
             ['+420 123 456 789', '+420123456789'],
@@ -150,7 +150,7 @@ class StringUtilsTest extends TestCase
         $this->assertSame($expectedResult, StringUtils::startsWith($haystack, $needle));
     }
 
-    public function provideForStartsWith(): array
+    public static function provideForStartsWith(): array
     {
         return [
             // $haystack, $needle, $expectedResult
@@ -175,7 +175,7 @@ class StringUtilsTest extends TestCase
         $this->assertSame($expectedResult, StringUtils::endsWith($haystack, $needle));
     }
 
-    public function provideForEndsWith(): array
+    public static function provideForEndsWith(): array
     {
         return [
             // $haystack, $needle, $expectedResult
@@ -200,7 +200,7 @@ class StringUtilsTest extends TestCase
         $this->assertEquals($expected, StringUtils::getFirstLetter($string));
     }
 
-    public function provideFirstLetter(): array
+    public static function provideFirstLetter(): array
     {
         return [
             'empty' => ['', ''],
@@ -221,7 +221,7 @@ class StringUtilsTest extends TestCase
         $this->assertSame($expected, StringUtils::contains($heystack, $needle));
     }
 
-    public function provideForContains(): array
+    public static function provideForContains(): array
     {
         return [
             // heystack, needle, expected

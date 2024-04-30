@@ -19,7 +19,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider imagesProvider
+     * @dataProvider provideImages
      */
     public function testShouldGetImages(string $content, array $expectedImages): void
     {
@@ -32,7 +32,7 @@ class HtmlHelperTest extends TestCase
         }
     }
 
-    public function imagesProvider(): array
+    public static function provideImages(): array
     {
         return [
             // content, imageSources
@@ -146,7 +146,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider tagProvider
+     * @dataProvider provideTags
      */
     public function testShouldTransformToHtmlTag(
         string $tag,
@@ -157,7 +157,7 @@ class HtmlHelperTest extends TestCase
         $this->assertSame($expected, $this->htmlHelper->transformToTag($tag, $parameters, $isSingleTag));
     }
 
-    public function tagProvider(): array
+    public static function provideTags(): array
     {
         return [
             // tag, parameters, isSingleTag, expected
@@ -197,7 +197,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider linksProvider
+     * @dataProvider provideLinks
      */
     public function testShouldGetAllLinksFromContent(string $content, array $expectedLinks): void
     {
@@ -210,7 +210,7 @@ class HtmlHelperTest extends TestCase
         }
     }
 
-    public function linksProvider(): array
+    public static function provideLinks(): array
     {
         return [
             // content, expectedLinks
@@ -363,7 +363,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider firstReplacementProvider
+     * @dataProvider provideFirstReplacement
      */
     public function testShouldInsertTextAfterFirstOccurrence(
         string $content,
@@ -374,7 +374,7 @@ class HtmlHelperTest extends TestCase
         $this->assertSame($expectedContent, $this->htmlHelper->insertAfterFirst($content, $replacement, $search));
     }
 
-    public function firstReplacementProvider(): array
+    public static function provideFirstReplacement(): array
     {
         return [
             // content, replacement, search for, expected replaced content
@@ -388,8 +388,8 @@ class HtmlHelperTest extends TestCase
                     '<p> </p>' .
                     '<p>Last paragraph</p>',
                 'replacement' => '{-top-}',
-                'search for' => '<p> </p>',
-                'expected' => '<p>Žluťoučký kůň se pase 🐴</p>' .
+                'search' => '<p> </p>',
+                'expectedContent' => '<p>Žluťoučký kůň se pase 🐴</p>' .
                     '<p> </p>{-top-}' .
                     '<p>Second paragraph</p>' .
                     '<p> </p>' .
@@ -399,7 +399,7 @@ class HtmlHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider lastReplacementProvider
+     * @dataProvider provideLastReplacement
      */
     public function testShouldInsertTextAfterLastOccurrence(
         string $content,
@@ -410,7 +410,7 @@ class HtmlHelperTest extends TestCase
         $this->assertSame($expectedContent, $this->htmlHelper->insertAfterLast($content, $replacement, $search));
     }
 
-    public function lastReplacementProvider(): array
+    public static function provideLastReplacement(): array
     {
         return [
             // content, replacement, search for, expected replaced content
@@ -425,8 +425,8 @@ class HtmlHelperTest extends TestCase
                     '<p> </p>' .
                     '<p>Last paragraph</p>',
                 'replacement' => '{-bottom-}',
-                'search for' => '<p> </p>',
-                'expected' => '<p>Žluťoučký kůň se pase 🐴</p>' .
+                'search' => '<p> </p>',
+                'expectedContent' => '<p>Žluťoučký kůň se pase 🐴</p>' .
                     '<p> </p>' .
                     '<p>Second paragraph</p>' .
                     '<p> </p>{-bottom-}' .

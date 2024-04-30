@@ -38,7 +38,7 @@ class XmlHelperTest extends TestCase
         $this->assertSame($expected, XmlHelper::getXmlAttributeValue($this->xml, $attributeName));
     }
 
-    public function provideAttributes(): array
+    public static function provideAttributes(): array
     {
         return [
             'existing' => ['totalCount', '123'],
@@ -122,7 +122,7 @@ class XmlHelperTest extends TestCase
         $this->assertSame($expectedOutput, XmlHelper::sanitizeXml($input));
     }
 
-    public function provideXmlData(): array
+    public static function provideXmlData(): array
     {
         return [
             ['Text with completely valid characters ĎŤŇŠŘÜÚ', 'Text with completely valid characters ĎŤŇŠŘÜÚ'],

@@ -19,7 +19,7 @@ class LetterItemTest extends TestCase
         $this->assertSame($expected, $letter->getLetter());
     }
 
-    public function provideLetter(): array
+    public static function provideLetter(): array
     {
         return [
             // letter, expected
