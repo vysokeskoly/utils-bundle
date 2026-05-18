@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 7.7.0 - 2026-05-18
 - Add `Environment` and `Tier` value objects
 
 ## 7.6.0 - 2024-04-30
