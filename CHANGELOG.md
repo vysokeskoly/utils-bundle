@@ -2,6 +2,7 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+- Add `Environment` and `Tier` value objects
 
 ## 7.6.0 - 2024-04-30
 - Ignore warning in parsing HTML

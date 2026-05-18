@@ -1,15 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VysokeSkoly\UtilsBundle\Service;
 
 use MF\Collection\Immutable\Generic\ISeq;
 use MF\Collection\Immutable\Generic\Map;
 use MF\Collection\Immutable\Generic\Seq;
-use function Safe\preg_match_all;
 use VysokeSkoly\UtilsBundle\Entity\Html\Image;
 use VysokeSkoly\UtilsBundle\Entity\Html\Link;
 use VysokeSkoly\UtilsBundle\Exception\FindHtmlTagException;
 use VysokeSkoly\UtilsBundle\Exception\UnexpectedKeyValueCountInFindHtmlTagException;
+use function Safe\preg_match_all;
 
 class HtmlHelper
 {
@@ -71,7 +73,7 @@ class HtmlHelper
 
         $content = $unsupportedTags
             ->reduce(
-                fn (string $acc, array $value, int|string $key = null) => str_replace(
+                fn(string $acc, array $value, int|string|null $key = null) => str_replace(
                     ['<' . $key, '</' . $key],
                     [$value['start'], $value['end']],
                     $acc,
@@ -172,9 +174,9 @@ class HtmlHelper
 
         // var_dump(['matchesKeys' => $matchesKeys->toArray()]); // left for debug
 
-        return fn (\DOMElement $element) => $matchesKeys
+        return fn(\DOMElement $element) => $matchesKeys
             ->reduce(
-                fn (bool $acc, array $attribute) => $acc || (
+                fn(bool $acc, array $attribute) => $acc || (
                     $element->hasAttribute($attribute['key']) &&
                     $element->getAttribute($attribute['key']) === $attribute['value']
                 ),

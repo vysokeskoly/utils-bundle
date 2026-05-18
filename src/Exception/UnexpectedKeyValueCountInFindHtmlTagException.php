@@ -1,7 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VysokeSkoly\UtilsBundle\Exception;
 
-class UnexpectedKeyValueCountInFindHtmlTagException extends \RuntimeException
-{
-}
+class UnexpectedKeyValueCountInFindHtmlTagException extends \RuntimeException {}

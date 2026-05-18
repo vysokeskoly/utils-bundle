@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VysokeSkoly\UtilsBundle\Service;
 
@@ -112,7 +114,7 @@ class StringUtils
         if ($index === '') {
             $collator->sort($toSort);
         } else {
-            usort($toSort, fn ($a, $b) => (int) $collator->compare($a[$index], $b[$index]));
+            usort($toSort, fn($a, $b) => (int) $collator->compare($a[$index], $b[$index]));
         }
 
         return $toSort;

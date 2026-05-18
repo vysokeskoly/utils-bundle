@@ -1,14 +1,16 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VysokeSkoly\UtilsBundle\Service;
 
 use Safe\Exceptions\LibxmlException;
 use Safe\Exceptions\SimplexmlException;
+use VysokeSkoly\UtilsBundle\Exception\DecodingException;
 use function Safe\json_decode;
 use function Safe\json_encode;
 use function Safe\libxml_get_last_error;
 use function Safe\simplexml_load_string;
-use VysokeSkoly\UtilsBundle\Exception\DecodingException;
 
 class XmlHelper
 {
@@ -70,7 +72,7 @@ class XmlHelper
 
         for ($i = 0; $i < $xmlLength; $i++) {
             $current = ord($xml[$i]);
-            if (($current == 0x9) || ($current == 0xA) || ($current == 0xD)
+            if (($current === 0x9) || ($current === 0xA) || ($current === 0xD)
                 || (($current >= 0x20) && ($current <= 0xD7FF))
                 || (($current >= 0xE000) && ($current <= 0xFFFD))
                 || (($current >= 0x10000) && ($current <= 0x10FFFF))

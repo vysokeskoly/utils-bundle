@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VysokeSkoly\UtilsBundle\Entity\Html;
 
@@ -18,6 +20,11 @@ class Image
     private array $parameters;
     private bool $isValid = true;
 
+    public function __construct(array $parameters)
+    {
+        $this->setParameters($parameters);
+    }
+
     public static function getMimeType(string $extension): string
     {
         [$extension] = explode(' ', $extension, 2);
@@ -36,15 +43,10 @@ class Image
     public static function fromDomElement(\DOMElement $element): self
     {
         $parameters = Map::fromPairs(
-            ListCollection::create($element->attributes, fn (\DOMAttr $attr) => new KVPair($attr->name, $attr->value)),
+            ListCollection::create($element->attributes, fn(\DOMAttr $attr) => new KVPair($attr->name, $attr->value)),
         );
 
         return new self($parameters->toArray());
-    }
-
-    public function __construct(array $parameters)
-    {
-        $this->setParameters($parameters);
     }
 
     private function setParameters(array $parameters): void
