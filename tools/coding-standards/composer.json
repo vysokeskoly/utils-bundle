@@ -1,7 +1,7 @@
 {
     "name": "tools/coding-standards",
     "require-dev": {
-        "lmc/coding-standard": "^3.3"
+        "almacareer/coding-standard": "^5.0"
     },
     "authors": [
         {
@@ -13,6 +13,9 @@
         "link": "cd ../../vendor/bin/ && ln -sf ../../tools/coding-standards/vendor/bin/ecs ecs"
     },
     "config": {
+        "platform": {
+            "php": "8.1.8"
+        },
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true

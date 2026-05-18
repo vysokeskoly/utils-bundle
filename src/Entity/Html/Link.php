@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VysokeSkoly\UtilsBundle\Entity\Html;
 
@@ -11,19 +13,19 @@ class Link
 {
     private array $parameters;
 
-    public static function fromDomElement(\DOMElement $element): self
-    {
-        $parameters = Map::fromPairs(
-            ListCollection::create($element->attributes, fn (\DOMAttr $attr) => new KVPair($attr->name, $attr->value)),
-        );
-
-        return new self($parameters->toArray());
-    }
-
     public function __construct(array $parameters)
     {
         Assertion::keyExists($parameters, 'href');
         $this->setParameters($parameters);
+    }
+
+    public static function fromDomElement(\DOMElement $element): self
+    {
+        $parameters = Map::fromPairs(
+            ListCollection::create($element->attributes, fn(\DOMAttr $attr) => new KVPair($attr->name, $attr->value)),
+        );
+
+        return new self($parameters->toArray());
     }
 
     private function setParameters(array $parameters): void
