@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 7.8.0 - 2026-05-19
 - Add `Instance` value object
 
 ## 7.7.0 - 2026-05-18
