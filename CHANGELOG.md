@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 7.9.0 - 2026-05-19
 - Add `CloudflareHelper` service
 - Add `Base64` helper class
 - Drop support for Symfony 5 and require ^6.3
