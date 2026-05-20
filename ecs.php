@@ -30,5 +30,6 @@ return ECSConfig::configure()
             'src/Service/StringUtils.php',
             'src/Service/LinkPlaceholderTransformer.php',
             'src/Service/Url.php',
+            'src/Service/Base64.php',
         ],
     ]);
