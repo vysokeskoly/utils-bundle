@@ -2,6 +2,9 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+- Add `RoadRunnerWorker`
+- Add `DebugLevelResolverInterface`
+- Add `RoadRunnerMemcachedSessionHandler`
 
 ## 7.9.0 - 2026-05-19
 - Add `CloudflareHelper` service

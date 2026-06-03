@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace VysokeSkoly\UtilsBundle\Service;
 
-class DebugLevel
+use Symfony\Contracts\Service\ResetInterface;
+
+class DebugLevel implements ResetInterface
 {
     public const DEBUG_OFF = 0;
     public const DEBUG_ON = 1;
@@ -46,5 +48,10 @@ class DebugLevel
     public function clear(): void
     {
         $this->setLevel(self::DEBUG_OFF);
+    }
+
+    public function reset(): void
+    {
+        self::$level = self::DEBUG_OFF;
     }
 }

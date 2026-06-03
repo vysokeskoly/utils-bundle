@@ -22,10 +22,13 @@
         "lmc/cqrs-http": "^3.0",
         "lmc/cqrs-types": "^3.1",
         "mf/collections-php": "^7.1",
+        "nyholm/psr7": "^1.4",
+        "spiral/roadrunner-http": "^3.6",
         "symfony/config": "^6.3",
         "symfony/dependency-injection": "^6.3",
         "symfony/http-foundation": "^6.3",
         "symfony/http-kernel": "^6.3",
+        "symfony/psr-http-message-bridge": "^6.3",
         "thecodingmachine/safe": "^2.2"
     },
     "require-dev": {
