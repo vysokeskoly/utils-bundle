@@ -6,3 +6,9 @@ parameters:
     ignoreErrors:
         - '#Comparison operation "<|>=" between .* is always (true|false).#'
         - '#Result of && is always (true|false)#'
+
+        # falsy generics
+        -
+            message: '#Unreachable statement - code above always terminates.#'
+            count: 1
+            path: src/RoadRunner/RoadRunnerWorker.php
