@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 7.10.0 - 2026-06-03
 - Add `RoadRunnerWorker`
 - Add `DebugLevelResolverInterface`
 - Add `RoadRunnerMemcachedSessionHandler`
