@@ -2,6 +2,8 @@
 
 <!-- There is always Unreleased section on the top. Subsections (Added, Changed, Fixed, Removed) should be added as needed. -->
 ## Unreleased
+
+## 8.0.0 - 2026-11-05
 - Fix `RoadRunnerWorker` losing trusted proxies on kernel boot (re-applied per request), which made Symfony redirects downgrade to `http://`
 - `RoadRunnerWorker` keeps the trusted header set configured by the kernel (`framework.trusted_headers`) instead of forcing its own
 - [BC] Remove `RoadRunnerWorker::withStaticDebugResolver()` — it ran before the container resolver and could keep a `?dbg=` level for non-internal requests; use the container-based `DebugLevelResolverInterface` instead
