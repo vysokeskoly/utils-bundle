@@ -63,6 +63,9 @@ RoadRunnerWorker::build(fn(string $env, bool $debug) => new Kernel($env, $debug)
 | `DEBUG_ALLOWED` | `false` | Whether debug/dev mode switching is permitted on this pod |
 
 Trusted proxies are always set to `0.0.0.0/0` (all) because in k8s, traffic passes through Istio sidecar + ingress gateway.
+They are re-applied before every request: each `Kernel::boot()` overwrites them from `framework.trusted_proxies`,
+and the `REMOTE_ADDR` keyword resolves to nothing in a CLI worker, which would leave `X-Forwarded-Proto` untrusted
+and make Symfony generate `http://` redirects.
 
 ## How It Works
 

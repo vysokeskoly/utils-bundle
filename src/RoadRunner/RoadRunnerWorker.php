@@ -44,9 +44,6 @@ final class RoadRunnerWorker
     private ?string $debugCookieName = null;
     private ?string $errorController = null;
 
-    /** @var (callable(Request, DebugLevel, EnvironmentInterface): void)|null */
-    private $staticDebugResolver = null;
-
     /** @var (callable(): array)|null Returns array of objects with ->asCookie(string $path) method */
     private $pendingCookiesProvider = null;
 
@@ -115,21 +112,6 @@ final class RoadRunnerWorker
     }
 
     /**
-     * Static debug resolver that runs BEFORE the container-based one.
-     * Useful for reading ?dbg= query param and debug cookies directly (no container needed).
-     *
-     * Example: fn(Request $r, DebugLevel $d, EnvironmentInterface $e) => resolveFromQueryParam($r, $d, $e)
-     *
-     * @param callable(Request, DebugLevel, EnvironmentInterface): void $resolver
-     */
-    public function withStaticDebugResolver(callable $resolver): self
-    {
-        $this->staticDebugResolver = $resolver;
-
-        return $this;
-    }
-
-    /**
      * Cookie name for debug session affinity (Istio consistent hash).
      * When set, first ?dbg= request without cookie gets a 302 redirect to set the cookie,
      * ensuring Istio pins subsequent requests (profiler, toolbar) to the same pod.
@@ -188,14 +170,7 @@ final class RoadRunnerWorker
             $_SERVER['DEFAULT_URI'] = $_ENV['DEFAULT_URI'] ?? 'http://localhost';
         }
 
-        // Trust all proxies — in k8s, traffic passes through Istio sidecar + ingress
-        Request::setTrustedProxies(
-            ['0.0.0.0/0', '::'],
-            Request::HEADER_X_FORWARDED_FOR
-            | Request::HEADER_X_FORWARDED_HOST
-            | Request::HEADER_X_FORWARDED_PORT
-            | Request::HEADER_X_FORWARDED_PROTO,
-        );
+        self::trustAllProxies();
 
         if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? $_ENV['TRUSTED_HOSTS'] ?? false) {
             Request::setTrustedHosts([$trustedHosts]);
@@ -284,6 +259,11 @@ final class RoadRunnerWorker
 
                 try {
                     $sfRequest = $httpFoundationFactory->createRequest($request);
+
+                    // Re-applied per request: every Kernel::boot() overwrites the trusted proxies
+                    // from kernel.trusted_proxies, and a REMOTE_ADDR keyword there resolves to nothing
+                    // in a CLI worker, which would make X-Forwarded-Proto untrusted (http:// redirects).
+                    self::trustAllProxies();
 
                     // --- Session & cookie reset ---
                     $this->resetSessionState($sfRequest);
@@ -399,6 +379,18 @@ final class RoadRunnerWorker
     // ──────────────────────────────────────────────────────────────────────────
 
     /**
+     * Trust all proxies — in k8s, traffic passes through Istio sidecar + ingress gateway.
+     *
+     * The trusted header set is kept as currently configured, so the kernel's
+     * framework.trusted_headers stays authoritative once it has booted. Before the
+     * first boot the Symfony default (all X-Forwarded-* headers) applies.
+     */
+    private static function trustAllProxies(): void
+    {
+        Request::setTrustedProxies(['0.0.0.0/0', '::/0'], Request::getTrustedHeaderSet());
+    }
+
+    /**
      * Reset PHP session state between requests.
      * In RoadRunner, $_COOKIE, $_SESSION, and session_id persist between requests.
      */
@@ -426,12 +418,7 @@ final class RoadRunnerWorker
     {
         assert($this->environment !== null);
 
-        // 1. Static resolution (reads ?dbg= and cookies directly, no container needed)
-        if ($this->staticDebugResolver !== null) {
-            ($this->staticDebugResolver)($request, $debugLevel, $this->environment);
-        }
-
-        // 2. Container-based resolution
+        // Container-based resolution
         if ($this->debugResolver !== null) {
             $resolvedLevel = $this->debugResolver->resolve($request, $this->environment)?->getDebugLevel();
             if ($resolvedLevel !== null) {
